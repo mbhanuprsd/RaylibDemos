@@ -23,12 +23,22 @@ int main()
 
     // Nebula's parameters
     Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
+
     Rectangle nebRec{0.0, 0.0, nebula.width / 8, nebula.height / 8};
     Vector2 nebPos{windowWidth, windowHeight - nebRec.height};
-    const int nebVel{-300}; // Velocity - pixel/s
+
+    Rectangle neb2Rec{0.0, 0.0, nebula.width / 8, nebula.height / 8};
+    Vector2 neb2Pos{windowWidth * 1.5, windowHeight - nebRec.height};
+
     int nebFrame{};
     const float nebUpdateTime{1.0 / 12.0}; // animation frame time
     float nebRunningTime{};
+
+    int neb2Frame{};
+    const float neb2UpdateTime{1.0 / 16.0}; // animation frame time
+    float neb2RunningTime{};
+
+    const int nebVel{-300}; // Velocity - pixel/s
 
     SetTargetFPS(60);
 
@@ -62,6 +72,12 @@ int main()
             nebPos.x = windowWidth;
         }
 
+        // Perform out of screen for second nebula
+        if (neb2Pos.x < -neb2Rec.width)
+        {
+            neb2Pos.x = windowWidth;
+        }
+
         // Jump on key press and when on ground
         if (IsKeyPressed(KEY_SPACE) && !isInAir)
         {
@@ -72,6 +88,8 @@ int main()
         scarfyPos.y += velocity * dT;
         // update nebula position
         nebPos.x += nebVel * dT;
+        // update second nebula position
+        neb2Pos.x += nebVel * dT;
 
         // update scarfy animation frame
         if (!isInAir)
@@ -104,8 +122,24 @@ int main()
             }
         }
 
+        // update second nebula animation frame
+        neb2RunningTime += dT;
+        if (neb2RunningTime >= neb2UpdateTime)
+        {
+            neb2RunningTime = 0;
+            // Update nebula animation frame
+            neb2Rec.x = neb2Frame * neb2Rec.width;
+            neb2Frame++;
+            if (neb2Frame > 7)
+            {
+                neb2Frame = 0;
+            }
+        }
+
         // draw nebula
         DrawTextureRec(nebula, nebRec, nebPos, WHITE);
+        //draw second nebula
+        DrawTextureRec(nebula, neb2Rec, neb2Pos, BLUE);
         // draw scarfy
         DrawTextureRec(scarfy, scarfyRect, scarfyPos, WHITE);
 
