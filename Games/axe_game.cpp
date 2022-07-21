@@ -36,9 +36,10 @@ int main()
 
         if (collision_with_axe)
         {
-            DrawText("Game Over", width / 3, height / 2, 50, RED);
+            DrawText("Game Over!", width / 3, height / 3, 50, RED);
+            DrawText("Press Enter to Replay", width / 3, height / 2, 20, GREEN);
             // Reset Game after "Enter" key press
-            if (IsKeyDown(KEY_ENTER))
+            if (IsKeyDown(KEY_ENTER) || IsKeyDown(KEY_KP_ENTER))
             {
                 circle_x = width / 4;
                 circle_y = height / 2;
